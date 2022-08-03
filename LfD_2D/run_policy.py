@@ -74,7 +74,7 @@ class Predictor:
         q0 = msg.pose.pose.orientation.w
         self.X = msg.pose.pose.position.x
         self.Y = msg.pose.pose.position.y
-        self.PSI = np.arctan2(2 * (q0 * q3 + q1 * q2), (1 - 2 * (q2**2 + q3**2)))
+        self.PSI = np.arctan2(2 * (q0 * q3 + q1 * q2), (1 - 2 * (q2 ** 2 + q3 ** 2)))
 
     @staticmethod
     def transform_lg(gp, X, Y, PSI):
@@ -299,7 +299,7 @@ if __name__ == "__main__":
 
     client = dynamic_reconfigure.client.Client("move_base/TrajectoryPlannerROS")
     client2 = dynamic_reconfigure.client.Client(
-        "move_base/local_costmap/inflater_layer"
+        "move_base/local_costmap/inflation_layer"
     )
 
     prev_cmd_time = None

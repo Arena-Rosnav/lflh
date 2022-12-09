@@ -285,17 +285,17 @@ if __name__ == "__main__":
     predictor = Predictor(model, params)
 
     rospy.init_node("context_classifier", anonymous=True)
-    sub_robot = rospy.Subscriber("/odom", Odometry, predictor.update_status)
+    sub_robot = rospy.Subscriber("odom", Odometry, predictor.update_status)
     sub_gp = rospy.Subscriber(
-        "/move_base/TrajectoryPlannerROS/global_plan",
+        "move_base/TrajectoryPlannerROS/global_plan",
         Path,
         predictor.update_global_path,
         queue_size=1,
     )
     sub_scan = rospy.Subscriber(
-        "/scan", LaserScan, predictor.update_laser, queue_size=1
+        "scan", LaserScan, predictor.update_laser, queue_size=1
     )
-    velocity_publisher = rospy.Publisher("/cmd_vel", Twist, queue_size=1)
+    velocity_publisher = rospy.Publisher("cmd_vel", Twist, queue_size=1)
 
     client = dynamic_reconfigure.client.Client("move_base/TrajectoryPlannerROS")
     client2 = dynamic_reconfigure.client.Client(

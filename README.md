@@ -7,7 +7,7 @@ For more information about LfLH refer to information presented by the authors at
 **Please note** LfLH is appropriate for usage on **only** the [Jackal platform](https://clearpathrobotics.com/jackal-small-unmanned-ground-vehicle/).
 
 # Installation
-## Add this package to your .rosinstall or clone it manually.
+<!-- ## Add this package to your .rosinstall or clone it manually.
 ```bash
 cd ~/catkin_ws/src/arena-bench # Navigate to your arena-bench location
 echo "- git:
@@ -15,10 +15,10 @@ echo "- git:
     uri: https://github.com/Arena-Rosnav/lflh
     version: master" >> .rosinstall
 rosws update ../planners/lflh # or rosws update
-```
+``` -->
 ## Activate poetry shell
 ```bash
-cd ~/catkin_ws/src/arena-bench # Navigate to your arena-bench location
+cd ~/catkin_ws/src/arena-rosnav # Navigate to your arena-bench location
 poetry shell
 ```
 ## Make sure to source the workspace environment

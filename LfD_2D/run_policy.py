@@ -239,7 +239,8 @@ class Predictor:
             local_goal = torch.from_numpy(self.local_goal[None]).to(self.params.device)
             cmd = self.policy(scan, local_goal)
             cmd = cmd[0].detach().cpu().numpy()  # remove batch size
-            self.v, self.w = cmd
+            if not np.any(np.isnan(cmd)):
+                self.v, self.w = cmd
 
         # safety check
         ctr = 0  # how many recover count
@@ -271,6 +272,7 @@ if __name__ == "__main__":
     params_path = os.path.join(repo_path, folder_path, "params.json")
     model_path = os.path.join(repo_path, folder_path, "trained_models", "model_1000")
 
+    
     params = TrainingParams(params_path, train=False)
     device = torch.device("cpu")
 
@@ -285,9 +287,12 @@ if __name__ == "__main__":
     predictor = Predictor(model, params)
 
     rospy.init_node("context_classifier", anonymous=True)
+
+    move_base_node = str(rospy.get_param("~move_base_node", "move_base"))
+
     sub_robot = rospy.Subscriber("odom", Odometry, predictor.update_status)
     sub_gp = rospy.Subscriber(
-        "move_base/TrajectoryPlannerROS/global_plan",
+        os.path.join(move_base_node, "TrajectoryPlannerROS", "global_plan"),
         Path,
         predictor.update_global_path,
         queue_size=1,
@@ -297,9 +302,11 @@ if __name__ == "__main__":
     )
     velocity_publisher = rospy.Publisher("cmd_vel", Twist, queue_size=1)
 
-    client = dynamic_reconfigure.client.Client("move_base/TrajectoryPlannerROS")
+    client = dynamic_reconfigure.client.Client(
+        os.path.join(move_base_node, "TrajectoryPlannerROS")
+    )
     client2 = dynamic_reconfigure.client.Client(
-        "move_base/local_costmap/inflation_layer"
+        os.path.join(move_base_node, "local_costmap", "inflation_layer")
     )
 
     prev_cmd_time = None
